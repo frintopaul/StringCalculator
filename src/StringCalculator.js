@@ -1,40 +1,33 @@
 import { useState } from "react";
 import "./css/StringCalculator.css";
 
-export function calc(input){
+export function calc(input) {
   if (input === "") {
     return 0;
   }
-  let newString = input.replace("\n",",")
-  debugger;
-  let NumArr = newString.split(",");
-  debugger;
-    return NumArr.reduce((sum, num) => {
-      if (num.trim() === "") throw new Error("Invalid input");
-      return sum + parseInt(num, 10);
-    }, 0);
+  let NumArr = input.split(/[\n,]+/);
+  if (NumArr.includes(NaN) || input.endsWith(",") || input.endsWith("\n")) {
+    throw new Error("Invalid input");
+  }
+  let sum = NumArr.reduce((total, num) => total + parseInt(num), 0);
+  return sum;
 }
 
 export function StringCalculator(input) {
   const [inputVal, setInputVal] = useState("");
   const [result, setresult] = useState("");
 
- const calculate = () => {
+  const calculate = () => {
     if (inputVal === "") {
       setresult(0);
       calc(inputVal);
       return 0;
     }
     calc(inputVal);
-    let newString = inputVal.replace("\n",",")
-    let NumArr = newString.split(",");
-    let resVal = NumArr.reduce((sum, num) => {
-      if (num.trim() === "") throw new Error("Invalid input");
-      return sum + parseInt(num, 10);
-    }, 0);
-    
-    setresult(resVal);
-
+    let NumArr = inputVal.split(/[\n,]+/);
+    let sum = NumArr.reduce((total, num) => total + parseInt(num), 0);
+    setresult(sum);
+    return sum;
   };
 
   const onchangeInput = (e) => {
@@ -44,7 +37,7 @@ export function StringCalculator(input) {
   const resetAll = () => {
     setresult("");
     setInputVal("");
-  }
+  };
 
   return (
     <div className="StringCalculator_outer">
